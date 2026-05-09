@@ -524,6 +524,64 @@ def patch_custom3p_model_validation(app: Path) -> None:
     print("Patched custom 3P model-name validation in app.asar")
 
 
+def pad_utf8_replacement(source: str, target: str) -> str:
+    source_len = len(source.encode("utf-8"))
+    target_len = len(target.encode("utf-8"))
+    if target_len > source_len:
+        raise SystemExit(f"Internal patch error: replacement is longer than source: {source}")
+    return target + (" " * (source_len - target_len))
+
+
+def patch_hardcoded_main_process_menu_labels(app: Path) -> None:
+    path = app / APP_ASAR_REL
+    require_file(path)
+
+    replacements = {
+        "Enable Main Process Debugger": "启用主进程调试器",
+        "Record Performance Trace": "记录性能跟踪",
+        "Write Main Process Heap Snapshot": "写入主进程堆快照",
+        "Record Memory Trace (auto-stop)": "记录内存跟踪 (自动)",
+    }
+
+    data = bytearray(path.read_bytes())
+    header_size, _header_string, header = read_asar_header(data, path)
+    entry = get_asar_file_entry(header, ASAR_PATCH_TARGET)
+    content_offset = 8 + header_size + int(entry["offset"])
+    content_size = int(entry["size"])
+    content_end = content_offset + content_size
+    if content_offset < 0 or content_end > len(data):
+        raise SystemExit(f"Unsupported app.asar file bounds for {ASAR_PATCH_TARGET}.")
+
+    content = bytes(data[content_offset:content_end])
+    text = content.decode("utf-8")
+    patched = text
+    count = 0
+    for source, target in replacements.items():
+        if target in patched:
+            continue
+        if source in patched:
+            patched = patched.replace(source, pad_utf8_replacement(source, target))
+            count += 1
+
+    if count == 0:
+        print("Hardcoded main-process menu labels already patched")
+        return
+
+    patched_content = patched.encode("utf-8")
+    if len(patched_content) != len(content):
+        raise SystemExit("Internal patch error: menu label replacement changed bundle size.")
+
+    data[content_offset:content_end] = patched_content
+    entry["integrity"] = calculate_file_integrity(patched_content)
+    updated_header_string = json.dumps(header, ensure_ascii=False, separators=(",", ":"))
+    updated_header = encode_asar_header(updated_header_string, header_size)
+    data[: len(updated_header)] = updated_header
+
+    path.write_bytes(data)
+    update_electron_asar_integrity(app, updated_header_string)
+    print(f"Patched hardcoded main-process menu labels: {count} replacements")
+
+
 def merge_frontend_locale(app: Path, lang_code: str) -> tuple[int, int, int]:
     config = get_language_config(lang_code)
     source = app / FRONTEND_I18N_REL / "en-US.json"
@@ -753,6 +811,7 @@ def main() -> int:
     patch_language_whitelist(patched_app, lang_code)
     patch_hardcoded_frontend_strings(patched_app)
     patch_language_display_names(patched_app)
+    patch_hardcoded_main_process_menu_labels(patched_app)
     patch_custom3p_model_validation(patched_app)
     merge_frontend_locale(patched_app, lang_code)
     install_desktop_locale(patched_app, lang_code)

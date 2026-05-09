@@ -859,6 +859,79 @@ function Patch-Custom3PModelValidation {
     Write-Host "  patched custom 3P model-name validation in app.asar" -ForegroundColor Green
 }
 
+function Patch-HardcodedMainProcessMenuLabels {
+    param([string]$ResourcesPath)
+
+    $asarPath = Join-Path $ResourcesPath "app.asar"
+    Require-File $asarPath
+
+    $replacements = @(
+        @("Enable Main Process Debugger", "启用主进程调试器"),
+        @("Record Performance Trace", "记录性能跟踪"),
+        @("Write Main Process Heap Snapshot", "写入主进程堆快照"),
+        @("Record Memory Trace (auto-stop)", "记录内存跟踪 (自动)")
+    )
+
+    $data = [System.IO.File]::ReadAllBytes($asarPath)
+    $parsed = Read-AsarHeader $data $asarPath
+    $headerSize = $parsed["HeaderSize"]
+    $header = $parsed["Header"]
+    $entry = Get-AsarFileEntry $header $AsarPatchTarget
+
+    $contentOffset = [int64](8 + $headerSize + [int64]$entry.offset)
+    $contentSize = [int64]$entry.size
+    $contentEnd = $contentOffset + $contentSize
+    if (($contentOffset -lt 0) -or ($contentEnd -gt $data.Length)) {
+        throw "Unsupported app.asar file bounds for $AsarPatchTarget."
+    }
+
+    $content = [byte[]]::new([int]$contentSize)
+    [System.Array]::Copy($data, [int]$contentOffset, $content, 0, [int]$contentSize)
+    $text = [System.Text.Encoding]::UTF8.GetString($content)
+    $patched = $text
+    $count = 0
+
+    foreach ($pair in $replacements) {
+        $source = $pair[0]
+        $target = $pair[1]
+        $sourceLength = [System.Text.Encoding]::UTF8.GetByteCount($source)
+        $targetLength = [System.Text.Encoding]::UTF8.GetByteCount($target)
+        if ($targetLength -gt $sourceLength) {
+            throw "Internal patch error: menu label replacement is longer than source: $source"
+        }
+
+        if ($patched.Contains($target)) {
+            continue
+        }
+        if ($patched.Contains($source)) {
+            $paddedTarget = $target + (" " * ($sourceLength - $targetLength))
+            $patched = $patched.Replace($source, $paddedTarget)
+            $count += 1
+        }
+    }
+
+    if ($count -eq 0) {
+        Write-Host "  hardcoded main-process menu labels already patched" -ForegroundColor Green
+        return
+    }
+
+    $patchedContent = [System.Text.Encoding]::UTF8.GetBytes($patched)
+    if ($patchedContent.Length -ne $content.Length) {
+        throw "Internal patch error: menu label replacement changed bundle size."
+    }
+
+    Backup-ModifiedFile $ResourcesPath $asarPath
+    [System.Array]::Copy($patchedContent, 0, $data, [int]$contentOffset, $patchedContent.Length)
+    $entry.integrity = Get-AsarFileIntegrity $patchedContent
+    $updatedHeaderString = $header | ConvertTo-Json -Compress -Depth 100
+    $updatedHeader = Encode-AsarHeader $updatedHeaderString $headerSize
+    [System.Array]::Copy($updatedHeader, 0, $data, 0, $updatedHeader.Length)
+
+    [System.IO.File]::WriteAllBytes($asarPath, $data)
+    Sync-ClaudeExeAsarIntegrity $ResourcesPath
+    Write-Host "  patched hardcoded main-process menu labels: $count replacements" -ForegroundColor Green
+}
+
 function Set-ClaudeLocale {
     param([string]$Locale)
 
@@ -976,6 +1049,7 @@ function Install-WindowsLanguagePack {
     Write-Step "[6/8] 汉化硬编码界面文本"
     Patch-HardcodedFrontendStrings $resourcesPath
     Patch-LanguageDisplayNames $resourcesPath
+    Patch-HardcodedMainProcessMenuLabels $resourcesPath
 
     Write-Step "[7/8] 修复第三方模型名校验"
     Patch-Custom3PModelValidation $resourcesPath
