@@ -25,8 +25,8 @@ $script:DetectedMultipleClaudeInstalls = $false
 function Read-InteractiveSelection {
     Write-Host "=== Claude Desktop Windows 中文补丁 ==="
     Write-Host ""
-    Write-Host "[1] 安装中文补丁"
-    Write-Host "[2] 安装中文补丁（安全模式，跳过 app.asar 补丁）"
+    Write-Host "[1] 安装中文补丁(会显示无法启动Claude的工作区,推荐使用[2])"
+    Write-Host "[2] 安装中文补丁(安全模式，跳过 app.asar 补丁,使用第三方模型需要搭配ccswitch使用)"
     Write-Host "[3] 恢复原样 / 卸载补丁"
     Write-Host "[Q] 退出"
     Write-Host ""

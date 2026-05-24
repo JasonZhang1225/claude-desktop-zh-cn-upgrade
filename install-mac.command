@@ -18,7 +18,7 @@ SKIP_ASAR_PATCH="${CLAUDE_SKIP_ASAR_PATCH:-0}"
 if [ -z "$ACTION" ]; then
   echo "请选择操作："
   echo "  [1] 安装中文补丁"
-  echo "  [2] 安装中文补丁（安全模式，跳过 app.asar 补丁,第三方模型需借助ccswitch映射）"
+  echo "  [2] 安装中文补丁(安全模式，跳过 app.asar 补丁,第三方模型需借助ccswitch映射)"
   echo "  [3] 恢复原样 / 卸载补丁"
   echo
   read -rp "请输入选项 [1/2/3，默认 1]: " action_choice
