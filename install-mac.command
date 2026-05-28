@@ -105,7 +105,7 @@ esac
 if [ "$ACTION" != "restore" ]; then
   echo "选择的语言: $LANG_CODE"
   if [ -n "$SKIP_ASAR_ARG" ]; then
-    echo "安全模式: 跳过 app.asar 补丁"
+    echo "安全模式: 跳过结构性 app.asar 补丁，仅应用等长菜单汉化补丁"
   fi
   echo
 fi

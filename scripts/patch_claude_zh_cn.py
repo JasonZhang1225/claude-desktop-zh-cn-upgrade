@@ -972,6 +972,65 @@ def replace_menu_intl_message_by_id(text: str, message_id: str, target: str) -> 
     return updated, count
 
 
+def replace_menu_literal_length_preserving(text: str, source: str, target: str) -> tuple[str, int]:
+    pattern = re.compile(
+        r"(?P<prefix>(?<![A-Za-z0-9_$])(?:label|defaultMessage)\s*:\s*)"
+        r'(?P<quote>["\'`])'
+        + re.escape(source)
+        + r"(?P=quote)"
+    )
+
+    def replace_match(match: re.Match[str]) -> str:
+        original = match.group(0)
+        quote = match.group("quote")
+        replacement = f"{match.group('prefix')}{quote}{target}{quote}"
+        byte_delta = len(original.encode("utf-8")) - len(replacement.encode("utf-8"))
+        if byte_delta < 0:
+            return original
+        return replacement + (" " * byte_delta)
+
+    return pattern.subn(replace_match, text)
+
+
+def patch_length_preserving_main_process_menu_labels(app: Path, lang_code: str) -> None:
+    path = app / APP_ASAR_REL
+    require_file(path)
+    replacements = get_main_process_menu_replacements(lang_code)
+
+    data = bytearray(path.read_bytes())
+    header_size, _header_string, header = read_asar_header(data, path)
+    entry = get_asar_file_entry(header, ASAR_PATCH_TARGET)
+    content_offset = 8 + header_size + int(entry["offset"])
+    content_size = int(entry["size"])
+    content_end = content_offset + content_size
+    if content_offset < 0 or content_end > len(data):
+        raise SystemExit(f"Unsupported app.asar file bounds for {ASAR_PATCH_TARGET}.")
+
+    content = bytes(data[content_offset:content_end])
+    text = content.decode("utf-8")
+    patched = text
+    count = 0
+    for source, target in sorted(replacements.items(), key=lambda item: len(item[0]), reverse=True):
+        patched, occurrences = replace_menu_literal_length_preserving(patched, source, target)
+        count += occurrences
+
+    patched_content = patched.encode("utf-8")
+    if patched_content == content:
+        print("Length-preserving main-process menu labels already patched")
+        return
+    if len(patched_content) != len(content):
+        raise SystemExit("Internal patch error: length-preserving menu patch changed app.asar content length.")
+
+    data[content_offset:content_end] = patched_content
+    entry["integrity"] = calculate_file_integrity(patched_content)
+    updated_header_string = json.dumps(header, ensure_ascii=False, separators=(",", ":"))
+    updated_header = encode_asar_header(updated_header_string, header_size)
+    data[: len(updated_header)] = updated_header
+    path.write_bytes(data)
+    update_electron_asar_integrity(app, updated_header_string)
+    print(f"Patched length-preserving main-process menu labels: {count} replacements")
+
+
 def patch_hardcoded_main_process_menu_labels(app: Path, lang_code: str) -> None:
     path = app / APP_ASAR_REL
     require_file(path)
@@ -1391,7 +1450,8 @@ def main() -> int:
         patch_online_locale_preload(patched_app, lang_code)
         patch_online_locale_main_process(patched_app, lang_code)
     if args.skip_asar_patch:
-        print("Skipping main-process menu label patch (--skip-asar-patch)")
+        print("Applying length-preserving main-process menu label patch (--skip-asar-patch)")
+        patch_length_preserving_main_process_menu_labels(patched_app, lang_code)
     else:
         patch_hardcoded_main_process_menu_labels(patched_app, lang_code)
     if args.skip_asar_patch:
