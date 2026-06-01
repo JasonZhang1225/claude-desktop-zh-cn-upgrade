@@ -531,7 +531,7 @@ def build_online_dom_translation_script(lang_code: str, mapping: dict[str, str])
         "try{"
         "const b=document.body||document.documentElement;if(!b)return;"
         "const w=document.createTreeWalker(b,NodeFilter.SHOW_TEXT,{acceptNode(n){"
-        "const p=n.parentElement;if(!p||X.has(p.tagName)||!R(n.nodeValue))return NodeFilter.FILTER_REJECT;"
+        "const p=n.parentElement;if(!p||X.has(p.tagName)||p.closest('[contenteditable]')||!R(n.nodeValue))return NodeFilter.FILTER_REJECT;"
         "return NodeFilter.FILTER_ACCEPT}});"
         "let n;while(n=w.nextNode()){const v=R(n.nodeValue);if(v)n.nodeValue=v}"
         'document.querySelectorAll("[aria-label],[title],[placeholder],input,textarea").forEach(e=>{'
