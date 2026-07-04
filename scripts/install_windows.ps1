@@ -5,7 +5,7 @@
     [string]$PatchMode = "safe",
 
     [Parameter(Position = 0)]
-    [ValidateSet("install", "uninstall", "disable-updates", "enable-updates", "sync-skills", "unsync-skills", "repair-cowork")]
+    [ValidateSet("install", "uninstall", "disable-updates", "enable-updates", "sync-skills", "unsync-skills")]
     [string]$Action = "install",
 
     [Parameter(Position = 1)]
@@ -130,14 +130,13 @@ function Read-InteractiveSelection {
     Write-Host "[2] 安装中文补丁(官方账号登录模式：Cowork 沙箱/工作区不可用(看群公告))"
     Write-Host "[3] 恢复原样 / 卸载补丁"
     Write-Host "[5] 同步 CC Switch skills（y=开启同步，n=删除同步）"
-    Write-Host "[6] 修复汉化后工作区（CoworkVMService）"
     Write-Host "[Q] 退出"
     Write-Host ""
 
     $patchModeForInstall = "safe"
     $actionSelected = $false
     while (-not $actionSelected) {
-        $actionSelection = (Read-Host "请选择操作 [1/2/3/4/5/6/Q]").Trim()
+        $actionSelection = (Read-Host "请选择操作 [1/2/3/4/5/Q]").Trim()
         switch -Regex ($actionSelection) {
             '^[1]$' { $patchModeForInstall = "safe"; $actionSelected = $true }
             '^[2]$' { $patchModeForInstall = "official"; $actionSelected = $true }
@@ -164,9 +163,8 @@ function Read-InteractiveSelection {
                     }
                 }
             }
-            '^[6]$' { return @{ Action = "repair-cowork"; Language = "zh-CN"; PatchMode = "safe" } }
             '^[Qq]$' { exit 0 }
-            default { Write-Host "请输入 1、2、3、4、5、6 或 Q。" -ForegroundColor Yellow }
+            default { Write-Host "请输入 1、2、3、4、5 或 Q。" -ForegroundColor Yellow }
         }
     }
 
@@ -2629,57 +2627,6 @@ function Start-CoworkVMService {
     }
 }
 
-function Repair-CoworkVMService {
-    $serviceName = "CoworkVMService"
-    $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\$serviceName"
-
-    Write-Host "=== 修复 CoworkVMService 自动启动 ===" -ForegroundColor Cyan
-
-    # 检查服务是否存在
-    $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
-    if (-not $service) {
-        Write-Host "  [错误] 未找到 Windows 服务 $serviceName，请确认 Claude Desktop 已正确安装。" -ForegroundColor Red
-        return
-    }
-
-    Write-Host "  当前服务状态: $($service.Status)，启动类型: $($service.StartType)" -ForegroundColor DarkGray
-
-    # 写注册表，将 Start 设为 2（自动启动）
-    # Start 值含义: 2=自动, 3=手动, 4=禁用
-    try {
-        reg add "HKLM\SYSTEM\CurrentControlSet\Services\$serviceName" /v Start /t REG_DWORD /d 2 /f | Out-Null
-        Write-Host "  已将 $serviceName 启动类型设为自动启动 (Start=2)" -ForegroundColor Green
-    }
-    catch {
-        Write-Host "  [错误] 写入注册表失败，需要管理员权限: $($_.Exception.Message)" -ForegroundColor Red
-        return
-    }
-
-    # 检查服务是否已在运行，未运行则启动
-    $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
-    if ($service.Status -ne "Running") {
-        Write-Host "  $serviceName 未在运行，正在启动..." -ForegroundColor DarkGray
-        try {
-            Start-Service -Name $serviceName -ErrorAction Stop
-            Start-Sleep -Seconds 2
-            $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
-            Write-Host "  $serviceName 已启动，当前状态: $($service.Status)" -ForegroundColor Green
-        }
-        catch {
-            Write-Host "  [警告] 启动 $serviceName 失败: $($_.Exception.Message)" -ForegroundColor Yellow
-            Write-Host "  [提示] 启动类型已设为自动，下次系统启动时会自动运行。" -ForegroundColor DarkGray
-        }
-    }
-    else {
-        Write-Host "  $serviceName 已在运行" -ForegroundColor Green
-    }
-
-    Write-Host ""
-    Write-Host "修复完成。" -ForegroundColor Green
-    Write-Host "按任意键返回主菜单..." -ForegroundColor DarkGray
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-}
-
 function Get-CCSwitchSkillsDirectory {
     $userProfile = $env:USERPROFILE
     if (-not $userProfile) {
@@ -3208,7 +3155,7 @@ function Restart-Claude {
 
     $exe = Get-ClaudeExePath $ClaudePath
     if ($exe) {
-        Start-Process $exe
+        Start-Process -FilePath "explorer.exe" -ArgumentList "`"$exe`""
         Write-Host "  restarted Claude Desktop" -ForegroundColor Green
         return
     }
@@ -3401,7 +3348,6 @@ try {
         "enable-updates" { Set-ClaudeAutoUpdates $true }
         "sync-skills" { Sync-CCSwitchSkills }
         "unsync-skills" { Unsync-CCSwitchSkills }
-        "repair-cowork" { Repair-CoworkVMService }
     }
 
     Stop-InstallLog
