@@ -543,6 +543,16 @@ def build_online_dom_translation_script(lang_code: str, mapping: dict[str, str])
         updated_week_text = "$1 周前更新"
         updated_month_text = "$1 个月前更新"
         updated_year_text = "$1 年前更新"
+        ran_command_text = "已运行命令"
+        ran_commands_text = "已运行 $1 个命令"
+        running_command_text = "正在运行命令"
+        running_command_ellipsis_text = "正在运行命令……"
+        thought_for_text = "思考了 $1 · $2 个词元"
+        thought_for_simple_text = "思考了 $1"
+        tokens_text = "$1 个词元"
+        approx_tokens_text = "~$1 个词元"
+        thinking_text = "思考……"
+        thinking_simple_text = "思考"
     else:
         selected_text = "已選擇 $1 項"
         delete_selected_text = "刪除 $1 個所選項目"
@@ -556,6 +566,16 @@ def build_online_dom_translation_script(lang_code: str, mapping: dict[str, str])
         updated_week_text = "$1 週前更新"
         updated_month_text = "$1 個月前更新"
         updated_year_text = "$1 年前更新"
+        ran_command_text = "已執行命令"
+        ran_commands_text = "已執行 $1 個命令"
+        running_command_text = "正在執行命令"
+        running_command_ellipsis_text = "正在執行命令……"
+        thought_for_text = "思考了 $1 · $2 個詞元"
+        thought_for_simple_text = "思考了 $1"
+        tokens_text = "$1 個詞元"
+        approx_tokens_text = "~$1 個詞元"
+        thinking_text = "思考……"
+        thinking_simple_text = "思考"
     dynamic_rules = "".join((
         f'[/^(\\d+) selected$/,"{selected_text}"],'
         f'[/^Delete (\\d+) selected item$/,"{delete_selected_text}"],'
@@ -572,7 +592,18 @@ def build_online_dom_translation_script(lang_code: str, mapping: dict[str, str])
         f'[/^Updated (\\d+) months? ago$/,"{updated_month_text}"],'
         f'[/^Updated (\\d+) years? ago$/,"{updated_year_text}"],'
         '[/^Mon$/,"周一"],[/^Tue$/,"周二"],[/^Wed$/,"周三"],[/^Thu$/,"周四"],'
-        '[/^Fri$/,"周五"],[/^Sat$/,"周六"],[/^Sun$/,"周日"]'
+        '[/^Fri$/,"周五"],[/^Sat$/,"周六"],[/^Sun$/,"周日"],'
+        f'[/^Thought for (.+) · ([~]?\\d+(?:\\.\\d+)?[kKmMgG]?)\\s*(?:tokens|词元|個詞元|个词元)$/i,"{thought_for_text}"],'
+        f'[/^Thought for (.+)$/,"{thought_for_simple_text}"],'
+        f'[/^([~]?\\d+(?:\\.\\d+)?[kKmMgG]?)\\s*(?:tokens|词元|個詞元|个词元)$/i,"{tokens_text}"],'
+        f'[/^Thinking\\.\\.\\.$/,"{thinking_text}"],'
+        f'[/^Thinking\\.\\.$/,"{thinking_text}"],'
+        f'[/^Thinking$/,"{thinking_simple_text}"],'
+        f'[/^Ran command$/,"{ran_command_text}"],'
+        f'[/^Ran (\\d+) commands$/,"{ran_commands_text}"],'
+        f'[/^Running command$/,"{running_command_text}"],'
+        f'[/^Running command…$/,"{running_command_ellipsis_text}"],'
+        f'[/^Running command\\.\\.\\.$/,"{running_command_ellipsis_text}"]'
     ))
     return (
         "(()=>{try{"
@@ -596,7 +627,7 @@ def build_online_dom_translation_script(lang_code: str, mapping: dict[str, str])
         '[/^Archive (\\d+) tasks\\? You can find them in the Archived tab\\.$/,"要归档 $1 个任务吗？你可以在“已归档”标签页中找到它们。"],'
         f'{dynamic_rules}];'
         'const R=s=>{const n=N(s);if(M[n])return M[n];for(const [r,t] of G){const m=n.match(r);'
-        'if(m)return t.replace("$1",m[1])}};'
+        'if(m){let res=t;for(let i=1;i<m.length;i++)res=res.replace("$"+i,m[i]);return res}}};'
         'const X=new Set(["SCRIPT","STYLE","NOSCRIPT"]),C="pre,code,kbd,samp,var,[data-language],[data-testid*=code],.cm-editor,.monaco-editor,.hljs";'
         "function T(){"
         "try{"

@@ -2170,5 +2170,9 @@
   [
     "defaultMessage:\"Show Claude in the menu bar\"",
     "defaultMessage:\"在菜单栏中显示 Claude\""
+  ],
+  [
+    " tokens",
+    " 词元"
   ]
 ]

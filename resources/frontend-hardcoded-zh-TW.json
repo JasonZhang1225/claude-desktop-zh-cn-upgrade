@@ -1666,5 +1666,9 @@
   [
     "defaultMessage:\"Show Claude in the menu bar\"",
     "defaultMessage:\"在菜單欄中顯示Claude\""
+  ],
+  [
+    " tokens",
+    " 詞元"
   ]
 ]

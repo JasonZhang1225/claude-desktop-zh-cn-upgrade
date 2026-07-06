@@ -1393,6 +1393,16 @@ function Get-OnlineDomTranslationScript {
         $updatedWeekText = "`$1 周前更新"
         $updatedMonthText = "`$1 个月前更新"
         $updatedYearText = "`$1 年前更新"
+        $ranCommandText = "已运行命令"
+        $ranCommandsText = "已运行 `$1 个命令"
+        $runningCommandText = "正在运行命令"
+        $runningCommandEllipsisText = "正在运行命令……"
+        $thoughtForText = "思考了 `$1 · `$2 个词元"
+        $thoughtForSimpleText = "思考了 `$1"
+        $tokensText = "`$1 个词元"
+        $approxTokensText = "~`$1 个词元"
+        $thinkingText = "思考……"
+        $thinkingSimpleText = "思考"
     } else {
         $selectedText = "已選擇 `$1 項"
         $deleteSelectedText = "刪除 `$1 個所選項目"
@@ -1402,6 +1412,16 @@ function Get-OnlineDomTranslationScript {
         $updatedWeekText = "`$1 週前更新"
         $updatedMonthText = "`$1 個月前更新"
         $updatedYearText = "`$1 年前更新"
+        $ranCommandText = "已執行命令"
+        $ranCommandsText = "已執行 `$1 個命令"
+        $runningCommandText = "正在執行命令"
+        $runningCommandEllipsisText = "正在執行命令……"
+        $thoughtForText = "思考了 `$1 · `$2 個詞元"
+        $thoughtForSimpleText = "思考了 `$1"
+        $tokensText = "`$1 個詞元"
+        $approxTokensText = "~`$1 個詞元"
+        $thinkingText = "思考……"
+        $thinkingSimpleText = "思考"
     }
     $selectedTextJson = $selectedText | ConvertTo-Json -Compress
     $deleteSelectedTextJson = $deleteSelectedText | ConvertTo-Json -Compress
@@ -1411,9 +1431,19 @@ function Get-OnlineDomTranslationScript {
     $updatedWeekTextJson = $updatedWeekText | ConvertTo-Json -Compress
     $updatedMonthTextJson = $updatedMonthText | ConvertTo-Json -Compress
     $updatedYearTextJson = $updatedYearText | ConvertTo-Json -Compress
+    $ranCommandTextJson = $ranCommandText | ConvertTo-Json -Compress
+    $ranCommandsTextJson = $ranCommandsText | ConvertTo-Json -Compress
+    $runningCommandTextJson = $runningCommandText | ConvertTo-Json -Compress
+    $runningCommandEllipsisTextJson = $runningCommandEllipsisText | ConvertTo-Json -Compress
+    $thoughtForTextJson = $thoughtForText | ConvertTo-Json -Compress
+    $thoughtForSimpleTextJson = $thoughtForSimpleText | ConvertTo-Json -Compress
+    $tokensTextJson = $tokensText | ConvertTo-Json -Compress
+    $approxTokensTextJson = $approxTokensText | ConvertTo-Json -Compress
+    $thinkingTextJson = $thinkingText | ConvertTo-Json -Compress
+    $thinkingSimpleTextJson = $thinkingSimpleText | ConvertTo-Json -Compress
     $template = @'
 (()=>{try{
-const L=__LANGUAGE__,M=__MAPPING__,ST=__SELECTED_TEXT__,DST=__DELETE_SELECTED_TEXT__,UMI=__UPDATED_MINUTE_TEXT__,UH=__UPDATED_HOUR_TEXT__,UD=__UPDATED_DAY_TEXT__,UW=__UPDATED_WEEK_TEXT__,UMO=__UPDATED_MONTH_TEXT__,UY=__UPDATED_YEAR_TEXT__;
+const L=__LANGUAGE__,M=__MAPPING__,ST=__SELECTED_TEXT__,DST=__DELETE_SELECTED_TEXT__,UMI=__UPDATED_MINUTE_TEXT__,UH=__UPDATED_HOUR_TEXT__,UD=__UPDATED_DAY_TEXT__,UW=__UPDATED_WEEK_TEXT__,UMO=__UPDATED_MONTH_TEXT__,UY=__UPDATED_YEAR_TEXT__,RC=__RAN_COMMAND__,RCS=__RAN_COMMANDS__,RGC=__RUNNING_COMMAND__,RGCE=__RUNNING_COMMAND_ELLIPSIS__,TF=__THOUGHT_FOR__,TFS=__THOUGHT_FOR_SIMPLE__,TO=__TOKENS_TEXT__,AT=__APPROX_TOKENS_TEXT__,TK=__THINKING__,TKS=__THINKING_SIMPLE__;
 localStorage.setItem("spa:locale",L);
 document.documentElement&&document.documentElement.setAttribute("lang",L);
 const N=s=>(s||"").replace(/\s+/g," ").trim();
@@ -1441,16 +1471,22 @@ const G=[
 [/^Updated (\d+) weeks? ago$/,UW],
 [/^Updated (\d+) months? ago$/,UMO],
 [/^Updated (\d+) years? ago$/,UY],
-[/^Mon$/,"周一"],[/^Tue$/,"周二"],[/^Wed$/,"周三"],[/^Thu$/,"周四"],[/^Fri$/,"周五"],[/^Sat$/,"周六"],[/^Sun$/,"周日"]
+[/^Mon$/,"周一"],[/^Tue$/,"周二"],[/^Wed$/,"周三"],[/^Thu$/,"周四"],[/^Fri$/,"周五"],[/^Sat$/,"周六"],[/^Sun$/,"周日"],
+[/^Thought for (.+) · ([~]?\d+(?:\.\d+)?[kKmMgG]?)\s*(?:tokens|词元|個詞元|个词元)$/i,TF],
+[/^Thought for (.+)$/,TFS],
+[/^([~]?\d+(?:\.\d+)?[kKmMgG]?)\s*(?:tokens|词元|個詞元|个词元)$/i,TO],
+[/^Thinking\.\.\.$/,TK],[/^Thinking\.\.$/,TK],[/^Thinking$/,TKS],
+[/^Ran command$/,RC],[/^Ran (\d+) commands$/,RCS],
+[/^Running command$/,RGC],[/^Running command…$/,RGCE],[/^Running command\.\.\.$/,RGCE]
 ];
-const R=s=>{const n=N(s);if(M[n])return M[n];for(const [r,t] of G){const m=n.match(r);if(m)return t.replace("$1",m[1])}};
+const R=s=>{const n=N(s);if(M[n])return M[n];for(const [r,t] of G){const m=n.match(r);if(m){let res=t;for(let i=1;i<m.length;i++)res=res.replace("$"+i,m[i]);return res}}};
 const X=new Set(["SCRIPT","STYLE","NOSCRIPT"]);
 function T(){try{const b=document.body||document.documentElement;if(!b)return;const w=document.createTreeWalker(b,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentElement;if(!p||X.has(p.tagName)||!R(n.nodeValue))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT}});let n;while(n=w.nextNode()){const v=R(n.nodeValue);if(v)n.nodeValue=v}document.querySelectorAll("[role=dialog] p,[role=dialog] div,[role=dialog] span").forEach(e=>{try{if(e.closest("button,[contenteditable]"))return;const t=R(e.textContent);if(t&&N(e.textContent)!==N(t))e.textContent=t}catch{}});document.querySelectorAll("[aria-label],[title],[placeholder],input,textarea").forEach(e=>{["aria-label","title","placeholder","value"].forEach(a=>{try{if(a==="value"&&!(e.matches("input[type=button],input[type=submit]")))return;let v=e.getAttribute?e.getAttribute(a):void 0;if(v==null&&a in e)v=e[a];const t=R(v);if(t){if(e.setAttribute)e.setAttribute(a,t);try{if(a in e)e[a]=t}catch{}}}catch{}})});document.querySelectorAll("a").forEach(e=>{try{const r=e.getBoundingClientRect(),txt=N(e.textContent);if(txt==="Claude"&&r.left<100&&r.top<100)e.style.visibility="hidden"}catch{}})}catch{}}
 T();
 new MutationObserver(T).observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true});
 }catch(e){}})()
 '@
-    return $template.Replace("__LANGUAGE__", $languageJson).Replace("__MAPPING__", $mappingJson).Replace("__SELECTED_TEXT__", $selectedTextJson).Replace("__DELETE_SELECTED_TEXT__", $deleteSelectedTextJson).Replace("__UPDATED_MINUTE_TEXT__", $updatedMinuteTextJson).Replace("__UPDATED_HOUR_TEXT__", $updatedHourTextJson).Replace("__UPDATED_DAY_TEXT__", $updatedDayTextJson).Replace("__UPDATED_WEEK_TEXT__", $updatedWeekTextJson).Replace("__UPDATED_MONTH_TEXT__", $updatedMonthTextJson).Replace("__UPDATED_YEAR_TEXT__", $updatedYearTextJson)
+    return $template.Replace("__LANGUAGE__", $languageJson).Replace("__MAPPING__", $mappingJson).Replace("__SELECTED_TEXT__", $selectedTextJson).Replace("__DELETE_SELECTED_TEXT__", $deleteSelectedTextJson).Replace("__UPDATED_MINUTE_TEXT__", $updatedMinuteTextJson).Replace("__UPDATED_HOUR_TEXT__", $updatedHourTextJson).Replace("__UPDATED_DAY_TEXT__", $updatedDayTextJson).Replace("__UPDATED_WEEK_TEXT__", $updatedWeekTextJson).Replace("__UPDATED_MONTH_TEXT__", $updatedMonthTextJson).Replace("__UPDATED_YEAR_TEXT__", $updatedYearTextJson).Replace("__RAN_COMMAND__", $ranCommandTextJson).Replace("__RAN_COMMANDS__", $ranCommandsTextJson).Replace("__RUNNING_COMMAND__", $runningCommandTextJson).Replace("__RUNNING_COMMAND_ELLIPSIS__", $runningCommandEllipsisTextJson).Replace("__THOUGHT_FOR__", $thoughtForTextJson).Replace("__THOUGHT_FOR_SIMPLE__", $thoughtForSimpleTextJson).Replace("__TOKENS_TEXT__", $tokensTextJson).Replace("__APPROX_TOKENS_TEXT__", $approxTokensTextJson).Replace("__THINKING__", $thinkingTextJson).Replace("__THINKING_SIMPLE__", $thinkingSimpleTextJson)
 }
 
 function Remove-ExistingOnlineDomTranslationPatch {
