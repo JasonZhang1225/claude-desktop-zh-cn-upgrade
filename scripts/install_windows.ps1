@@ -131,21 +131,21 @@ Test-GitHubReleaseUpdate
 function Read-InteractiveSelection {
     Write-Host "=== Claude Desktop Windows 中文补丁 ==="
     Write-Host ""
-    Write-Host "[1] 安装中文补丁(第三方API登陆模式(例DeepSeek)：（Cowork 沙箱/工作区不可用(看群公告))"
-    Write-Host "[2] 安装中文补丁(官方账号登录模式：Cowork 沙箱/工作区不可用(看群公告))"
+    Write-Host "[1] 安装中文补丁（完整模式：深度汉化，包含在线聊天网页 DOM，支持官方与第三方API。注意：会破坏签名，导致官方沙箱/工作区不可用）"
+    Write-Host "[2] 安装中文补丁（安全模式：仅汉化本地菜单与设置，不破坏签名，官方沙箱功能正常。注意：不汉化网页聊天区，第三方API需搭配 CC Switch 使用）"
     Write-Host "[3] 恢复原样 / 卸载补丁"
     Write-Host "[4] 自动更新设置（y=禁止自动更新，n=允许自动更新）"
     Write-Host "[5] 同步 CC Switch skills（y=开启同步，n=删除同步）"
     Write-Host "[Q] 退出"
     Write-Host ""
 
-    $patchModeForInstall = "safe"
+    $patchModeForInstall = "official"
     $actionSelected = $false
     while (-not $actionSelected) {
         $actionSelection = (Read-Host "请选择操作 [1/2/3/4/5/Q]").Trim()
         switch -Regex ($actionSelection) {
-            '^[1]$' { $patchModeForInstall = "safe"; $actionSelected = $true }
-            '^[2]$' { $patchModeForInstall = "official"; $actionSelected = $true }
+            '^[1]$' { $patchModeForInstall = "official"; $actionSelected = $true }
+            '^[2]$' { $patchModeForInstall = "safe"; $actionSelected = $true }
             '^[3]$' { return @{ Action = "uninstall"; Language = "zh-CN"; PatchMode = "safe" } }
             '^[4]$' {
                 $updateChoice = (Read-Host "是否禁止自动更新？[y=禁止 / n=允许]").Trim()
