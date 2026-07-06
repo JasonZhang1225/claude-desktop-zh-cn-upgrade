@@ -5911,7 +5911,7 @@
   "L3MUU/5h5Y": "筛选项目",
   "L3Ps66dXF+": "法学学生",
   "L3X2XEf/yB": "等待运行器…",
-  "L3orNe9gpJ": "在通知中引起注意",
+  "L3orNe9gpJ": "需要注意时提醒我",
   "L488a5jdgF": "断开服务器连接失败",
   "L4QFhO1m34": "项目视图",
   "L4YHpXgEsN": "确定要{action}<b>{keyName}</b>吗？",
@@ -16332,5 +16332,13 @@
   "FEazi7H/Xn": "正在运行代码…",
   "GoRRWrNJ3y": "正在加载用量…",
   "y/Pw4ViwGE": "正在运行工作流…",
-  "EVuDzeSeu3": "此回复跳过了思考，因此 Claude 直接做出了回答。"
+  "EVuDzeSeu3": "此回复跳过了思考，因此 Claude 直接做出了回答。",
+  "fqGy//t5Zq": "文本和内容宽度",
+  "hu2PDDBCub": "对话内容和输入框的最大宽度。",
+  "Cs33xZFR6o": "窄",
+  "PSiaaVYiAT": "宽",
+  "BuRvbWB88b": "当 Claude 需要您注意且应用未处于焦点状态时，闪烁任务栏按钮。",
+  "Xo6PHAAyUE": "添加到本地和云端会话分支名称的前缀",
+  "OIJOcSxF7T": "自定义 → {section}",
+  "B6peXDhgLV": "自定义项目图标和颜色"
 }

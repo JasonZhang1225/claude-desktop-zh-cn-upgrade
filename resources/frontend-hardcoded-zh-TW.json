@@ -1670,5 +1670,93 @@
   [
     " tokens",
     " 詞元"
+  ],
+  [
+    "defaultMessage:\"Chat memory has moved to <link>Customize</link>. Head there to manage your memories.\"",
+    "defaultMessage:\"聊天記憶已移至<link>自訂</link>。請前往管理你的記憶。\""
+  ],
+  [
+    "defaultMessage:\"Close the Customize panel to toggle sidebar\"",
+    "defaultMessage:\"關閉自定義面板以切換側邊欄\""
+  ],
+  [
+    "defaultMessage:\"Connectors have moved to <link>Customize</link>. Head there to browse, connect, and manage them.\"",
+    "defaultMessage:\"連接器已移至 <link>自定義</link>。請前往那裡瀏覽、連接和管理它們。\""
+  ],
+  [
+    "defaultMessage:\"Create your default cloud environment and control Claude's network access. Customize and create new environments anytime in settings.\"",
+    "defaultMessage:\"創建你的默認雲環境並控制 Claude 的網絡訪問。隨時在設置中自定義和創建新環境。\""
+  ],
+  [
+    "defaultMessage:\"Customize\"",
+    "defaultMessage:\"自訂\""
+  ],
+  [
+    "defaultMessage:\"Customize Artifact\"",
+    "defaultMessage:\"自定義 Artifact\""
+  ],
+  [
+    "defaultMessage:\"Customize Claude\"",
+    "defaultMessage:\"定製Claude\""
+  ],
+  [
+    "defaultMessage:\"Customize Claude to your role\"",
+    "defaultMessage:\"根據你的角色定製Claude\""
+  ],
+  [
+    "defaultMessage:\"Customize access\"",
+    "defaultMessage:\"自訂訪問權限\""
+  ],
+  [
+    "defaultMessage:\"Customize is not available for teams\"",
+    "defaultMessage:\"自定義不適用於團隊\""
+  ],
+  [
+    "defaultMessage:\"Customize sidebar\"",
+    "defaultMessage:\"自定義側邊欄\""
+  ],
+  [
+    "defaultMessage:\"Customize this Artifact\"",
+    "defaultMessage:\"自定義這個 Artifact\""
+  ],
+  [
+    "defaultMessage:\"Customize this artifact?\"",
+    "defaultMessage:\"自定義這個 Artifact？\""
+  ],
+  [
+    "defaultMessage:\"Customize what your org sees\"",
+    "defaultMessage:\"自定義你的組織所看到的內容\""
+  ],
+  [
+    "defaultMessage:\"Customize with Claude\"",
+    "defaultMessage:\"與Claude一起定製\""
+  ],
+  [
+    "defaultMessage:\"Customize with plugins\"",
+    "defaultMessage:\"使用插件自定義\""
+  ],
+  [
+    "defaultMessage:\"Customize {serverName}\"",
+    "defaultMessage:\"自定義 {serverName}\""
+  ],
+  [
+    "defaultMessage:\"Skills have moved to <link>Customize</link>.\"",
+    "defaultMessage:\"技能已移至 <link>自定義</link>。\""
+  ],
+  [
+    "defaultMessage:\"Tools you already use \\u2014 connect now or anytime from Customize.\"",
+    "defaultMessage:\"你已經使用的工具：現在連接，或稍後從“自定義”中連接。\""
+  ],
+  [
+    "defaultMessage:\"Customize \\u2192 {section}\"",
+    "defaultMessage:\"自訂 → {section}\""
+  ],
+  [
+    "defaultMessage:\"Customize project icon and color\"",
+    "defaultMessage:\"自訂專案圖示和顏色\""
+  ],
+  [
+    "Customize",
+    "自訂"
   ]
 ]

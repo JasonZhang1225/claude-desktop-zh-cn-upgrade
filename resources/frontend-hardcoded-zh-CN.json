@@ -2174,5 +2174,93 @@
   [
     " tokens",
     " 词元"
+  ],
+  [
+    "defaultMessage:\"Chat memory has moved to <link>Customize</link>. Head there to manage your memories.\"",
+    "defaultMessage:\"聊天记忆已移至<link>自定义</link>。请前往管理你的记忆。\""
+  ],
+  [
+    "defaultMessage:\"Close the Customize panel to toggle sidebar\"",
+    "defaultMessage:\"关闭自定义面板以切换侧边栏\""
+  ],
+  [
+    "defaultMessage:\"Connectors have moved to <link>Customize</link>. Head there to browse, connect, and manage them.\"",
+    "defaultMessage:\"连接器已移至<link>自定义</link>。前往该处浏览、连接和管理它们。\""
+  ],
+  [
+    "defaultMessage:\"Create your default cloud environment and control Claude's network access. Customize and create new environments anytime in settings.\"",
+    "defaultMessage:\"创建你的默认云环境，并控制 Claude 的网络访问。随时在设置中自定义和创建新环境。\""
+  ],
+  [
+    "defaultMessage:\"Customize\"",
+    "defaultMessage:\"自定义\""
+  ],
+  [
+    "defaultMessage:\"Customize Artifact\"",
+    "defaultMessage:\"自定义工件\""
+  ],
+  [
+    "defaultMessage:\"Customize Claude\"",
+    "defaultMessage:\"自定义 Claude\""
+  ],
+  [
+    "defaultMessage:\"Customize Claude to your role\"",
+    "defaultMessage:\"根据你的角色自定义 Claude\""
+  ],
+  [
+    "defaultMessage:\"Customize access\"",
+    "defaultMessage:\"自定义访问\""
+  ],
+  [
+    "defaultMessage:\"Customize is not available for teams\"",
+    "defaultMessage:\"自定义功能不适用于团队\""
+  ],
+  [
+    "defaultMessage:\"Customize sidebar\"",
+    "defaultMessage:\"自定义侧边栏\""
+  ],
+  [
+    "defaultMessage:\"Customize this Artifact\"",
+    "defaultMessage:\"自定义此工件\""
+  ],
+  [
+    "defaultMessage:\"Customize this artifact?\"",
+    "defaultMessage:\"自定义此工件？\""
+  ],
+  [
+    "defaultMessage:\"Customize what your org sees\"",
+    "defaultMessage:\"自定义你的组织所见内容\""
+  ],
+  [
+    "defaultMessage:\"Customize with Claude\"",
+    "defaultMessage:\"用 Claude 自定义\""
+  ],
+  [
+    "defaultMessage:\"Customize with plugins\"",
+    "defaultMessage:\"使用插件进行自定义\""
+  ],
+  [
+    "defaultMessage:\"Customize {serverName}\"",
+    "defaultMessage:\"自定义 {serverName}\""
+  ],
+  [
+    "defaultMessage:\"Skills have moved to <link>Customize</link>.\"",
+    "defaultMessage:\"技能已移至<link>自定义</link>。\""
+  ],
+  [
+    "defaultMessage:\"Tools you already use \\u2014 connect now or anytime from Customize.\"",
+    "defaultMessage:\"你已经在使用的工具——现在连接，或随时从“自定义”中连接。\""
+  ],
+  [
+    "defaultMessage:\"Customize \\u2192 {section}\"",
+    "defaultMessage:\"自定义 → {section}\""
+  ],
+  [
+    "defaultMessage:\"Customize project icon and color\"",
+    "defaultMessage:\"自定义项目图标和颜色\""
+  ],
+  [
+    "Customize",
+    "自定义"
   ]
 ]
