@@ -2132,19 +2132,43 @@
     "本地和云端会话的分支名称前缀"
   ],
   [
-    "You're running Claude through your organization's own inference provider",
-    "你正在通过你组织的自有推理提供商运行 Claude"
-  ],
-  [
-    "Your conversations are sent there, not to Anthropic, and are governed by your organization's agreement with that provider.",
-    "你的对话会发送到那里，而不是 Anthropic，并受你组织与该提供商的协议约束。"
-  ],
-  [
     "Describe a task or ask a question",
     "描述一个任务或提问"
   ],
   [
     "Type / for commands",
     "键入 / 以使用命令"
+  ],
+  [
+    "defaultMessage:\"You\\u2019re running Claude through your organization\\u2019s own inference provider ({providerDisplayName}). Your conversations are sent there, not to Anthropic, and are governed by your organization\\u2019s agreement with that provider.\"",
+    "defaultMessage:\"你正通过组织的自有推理提供商 ({providerDisplayName}) 运行 Claude。你的对话会发送到该提供商，而非 Anthropic，并受你组织与该提供商的协议约束。\""
+  ],
+  [
+    "defaultMessage:\"Your artifacts and scheduled tasks are stored at {path}.\"",
+    "defaultMessage:\"您的工件和计划任务存储在 {path}。\""
+  ],
+  [
+    "defaultMessage:\"When you attach one of these folders to a Cowork task, Claude won't ask you to confirm.\"",
+    "defaultMessage:\"当您将其中一个文件夹附加到 Cowork 任务时，Claude 不会要求您确认。\""
+  ],
+  [
+    "defaultMessage:\"{count, plural, one {# hour ago} other {# hours ago}}\"",
+    "defaultMessage:\"{count, plural, one {# 小时前} other {# 小时前}}\""
+  ],
+  [
+    "defaultMessage:\"{count, plural, one {# minute ago} other {# minutes ago}}\"",
+    "defaultMessage:\"{count, plural, one {#分钟前} other {#分钟前}}\""
+  ],
+  [
+    "defaultMessage:\"{count, plural, one {# day ago} other {# days ago}}\"",
+    "defaultMessage:\"{count, plural, one {# 天前} other {# 天前}}\""
+  ],
+  [
+    "defaultMessage:\"just now\"",
+    "defaultMessage:\"刚刚\""
+  ],
+  [
+    "defaultMessage:\"Show Claude in the menu bar\"",
+    "defaultMessage:\"在菜单栏中显示 Claude\""
   ]
 ]
