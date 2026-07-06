@@ -1634,53 +1634,5 @@
   [
     "\"allow\" pre-approves.",
     "\"allow\" 会预先核准。"
-  ],
-  [
-    "Higher effort means more thorough responses, but takes longer and uses your limits faster.",
-    "更高的思考深度會帶來更全面的回應，但耗時更久，也會更快消耗你的額度。"
-  ],
-  [
-    "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.",
-    "可能會消耗大量 token，導致回應時間很長，也可能觸及 token 限制。請僅在最困難的任務中謹慎使用。"
-  ],
-  [
-    "Most capable for ambitious work",
-    "適合高難度工作的最強模型"
-  ],
-  [
-    "1M context window",
-    "100 萬上下文視窗"
-  ],
-  [
-    "defaultMessage:\"Low\",id:\"Xft0R8xbIB\"",
-    "defaultMessage:\"低\",id:\"Xft0R8xbIB\""
-  ],
-  [
-    "defaultMessage:\"Medium\",id:\"U0mtsR78v2\"",
-    "defaultMessage:\"中\",id:\"U0mtsR78v2\""
-  ],
-  [
-    "defaultMessage:\"High\",id:\"vv9L/MN3/H\"",
-    "defaultMessage:\"高\",id:\"vv9L/MN3/H\""
-  ],
-  [
-    "defaultMessage:\"Extra\",id:\"HoZQmASaw3\"",
-    "defaultMessage:\"極高\",id:\"HoZQmASaw3\""
-  ],
-  [
-    "defaultMessage:\"Max\",id:\"Zk4EtKw26K\"",
-    "defaultMessage:\"最高\",id:\"Zk4EtKw26K\""
-  ],
-  [
-    "defaultMessage:\"Thinking\",id:\"DvRKnnUSOG\"",
-    "defaultMessage:\"思考\",id:\"DvRKnnUSOG\""
-  ],
-  [
-    "defaultMessage:\"Extended\",id:\"4RgMF5iUDm\"",
-    "defaultMessage:\"延伸\",id:\"4RgMF5iUDm\""
-  ],
-  [
-    "defaultMessage:\"Off\",id:\"PLBs+fqK6A\"",
-    "defaultMessage:\"關閉\",id:\"PLBs+fqK6A\""
   ]
 ]

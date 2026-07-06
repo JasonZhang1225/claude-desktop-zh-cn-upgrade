@@ -1384,7 +1384,7 @@ const R=s=>{const n=N(s);if(M[n])return M[n];for(const [r,t] of G){const m=n.mat
 const X=new Set(["SCRIPT","STYLE","NOSCRIPT"]);
 function T(){try{const b=document.body||document.documentElement;if(!b)return;const w=document.createTreeWalker(b,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentElement;if(!p||X.has(p.tagName)||!R(n.nodeValue))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT}});let n;while(n=w.nextNode()){const v=R(n.nodeValue);if(v)n.nodeValue=v}document.querySelectorAll("[role=dialog] p,[role=dialog] div,[role=dialog] span").forEach(e=>{try{if(e.closest("button,[contenteditable]"))return;const t=R(e.textContent);if(t&&N(e.textContent)!==N(t))e.textContent=t}catch{}});document.querySelectorAll("[aria-label],[title],[placeholder],input,textarea").forEach(e=>{["aria-label","title","placeholder","value"].forEach(a=>{try{if(a==="value"&&!(e.matches("input[type=button],input[type=submit]")))return;let v=e.getAttribute?e.getAttribute(a):void 0;if(v==null&&a in e)v=e[a];const t=R(v);if(t){if(e.setAttribute)e.setAttribute(a,t);try{if(a in e)e[a]=t}catch{}}}catch{}})});document.querySelectorAll("a").forEach(e=>{try{const r=e.getBoundingClientRect(),txt=N(e.textContent);if(txt==="Claude"&&r.left<100&&r.top<100)e.style.visibility="hidden"}catch{}})}catch{}}
 T();
-new MutationObserver(()=>{clearTimeout(window.__claudeZhDomTimer);window.__claudeZhDomTimer=setTimeout(T,30)}).observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true});
+new MutationObserver(T).observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true});
 }catch(e){}})()
 '@
     return $template.Replace("__LANGUAGE__", $languageJson).Replace("__MAPPING__", $mappingJson).Replace("__SELECTED_TEXT__", $selectedTextJson).Replace("__DELETE_SELECTED_TEXT__", $deleteSelectedTextJson).Replace("__UPDATED_MINUTE_TEXT__", $updatedMinuteTextJson).Replace("__UPDATED_HOUR_TEXT__", $updatedHourTextJson).Replace("__UPDATED_DAY_TEXT__", $updatedDayTextJson).Replace("__UPDATED_WEEK_TEXT__", $updatedWeekTextJson).Replace("__UPDATED_MONTH_TEXT__", $updatedMonthTextJson).Replace("__UPDATED_YEAR_TEXT__", $updatedYearTextJson)
@@ -2252,7 +2252,6 @@ function Get-ModelPickerReplacementPairs {
                 @("name:`"Medium`"", "name:`"中`""),
                 @("name:`"High`"", "name:`"高`""),
                 @("name:`"Extra`"", "name:`"极高`""),
-                @("name:`"Max`"", "name:`"最高`""),
                 @("message:`"Default`"", "message:`"默认`"")
             )
         }
@@ -2266,7 +2265,6 @@ function Get-ModelPickerReplacementPairs {
                 @("name:`"Medium`"", "name:`"中`""),
                 @("name:`"High`"", "name:`"高`""),
                 @("name:`"Extra`"", "name:`"極高`""),
-                @("name:`"Max`"", "name:`"最高`""),
                 @("message:`"Default`"", "message:`"預設`"")
             )
         }
@@ -2280,7 +2278,6 @@ function Get-ModelPickerReplacementPairs {
                 @("name:`"Medium`"", "name:`"中`""),
                 @("name:`"High`"", "name:`"高`""),
                 @("name:`"Extra`"", "name:`"極高`""),
-                @("name:`"Max`"", "name:`"最高`""),
                 @("message:`"Default`"", "message:`"預設`"")
             )
         }
