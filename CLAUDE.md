@@ -86,6 +86,38 @@ grep '"<id>"' ../i18n/en-US.json ../i18n/zh-CN.json
 - 跑 `install-mac.command` 对 `/Applications/Claude.app` 实测：placeholder 中文、无英文闪现、菜单中文、Max 显示英文 "Max"。
 - `git status` 干净、`git log` / `git tag` 含本次 release。
 
+## 本轮新增改动（1.3.8 系列）
+
+### 4d — Cowork Scheduled 翻译修正 + token 误译
+
+`frontend-zh-CN.json` 中 Cowork 主页的 Scheduled 原译"已安排"，改为"定时任务"。zh-HK/zh-TW 的"排程任務"同步改"定時任務"。zh-HK/zh-TW 的 token 翻译误用"權杖"（OAuth 登录相关），改为"詞元"（LLM 词元）。hardcoded 替换文件同步修正。
+
+### 4e — Windows PS1 脚本 PS5.1 兼容性修复 + 新增 Merge-FrontendLocale
+
+PowrShell 5.1（Win10/11 默认）不认识 `ConvertFrom-Json -AsHashtable`（PS7 才有）。改为 .NET `JavaScriptSerializer` 解析 JSON，同时解决 PS5.1 下 PSCustomObject 大小写不敏感导致的撞键崩溃。
+
+新增 `Merge-FrontendLocale` 函数：逐 key 合并 en-US.json + zh-CN.json，确保 locale 翻译全覆盖（macOS 早有此功能，Windows 一直缺失）。这是 **Customize 等 hardcoded 替换未命中时的关键兜底**——如果没有 merge，前端 key 缺翻译时 react-intl 直接显示英文。
+
+### 4f — 菜单显示选项 4 + 第 7 步进度
+
+Windows 交互菜单（install-windows.bat）补上缺失的 `[4] 自动更新设置` 行。第 7 步（硬编码文本替换）加逐文件进度 `[进度] [1/772] filename.js`，消除无响应感。
+
+### 4g — simpleinstall / uninstallall .bat 修复
+
+- simpleinstall-windows.bat：LF 行尾导致 cmd.exe 崩溃 → 保存为 UTF-8+CRLF+chcp。
+- uninstallall-windows.bat：ISO-8859 编码+传无效 `-NoPause` 参数 → 重写 UTF-8+CRLF，删无效参数。
+- 日志改写入 `logs/` 目录，文件名含时间戳。
+
+### 4h — Customize 翻译不生效（经验记录）
+
+**现象**：Windows 上 Customize 页面（设置→自定义）标题/文案仍是英文。
+
+**机制分析**：Customize 渲染走了两条路径：
+1. **locale JSON 路径**：key `l48+J1nxkN` + `woFlBYmlIQ` 在 `frontend-zh-CN.json` 中已有翻译。但 PS1 此前缺失 `Merge-FrontendLocale`，未与 en-US.json 合并 → 前端 `formatMessage({id})` 时 zh-CN.json 缺 key → react-intl 回退英文。
+2. **hardcoded 替换路径**：`label:"Customize"` 在 `frontend-hardcoded-zh-CN.json` 中有条目。但 JS minifier 可能改变了源码格式（如 `label:/* @__PURE__ */ "Customize"`），精确字符串匹配失败 → 静默跳过。
+
+**教训**：hardcoded 替换是脆弱的——JS bundle 打包方式变化（minifier 版本、注释注入、变量重命名）都会破坏精确字符串匹配。通过 `Merge-FrontendLocale` 覆盖 locale JSON 路径是更稳健的方式。Windows 实现隔了一轮才补上 merge 功能，导致 Customize 等翻译在 Windows 上长期未生效。以后新增翻译应先确认 locale JSON（`formatMessage`）路径，hardcoded 替换作为辅助。
+
 ## Git 落库约定
 
 - 单一真相源 = 本仓库（fork：`https://github.com/JasonZhang1225/claude-desktop-zh-cn-upgrade`）

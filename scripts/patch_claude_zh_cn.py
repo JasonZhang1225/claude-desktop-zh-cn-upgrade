@@ -935,7 +935,7 @@ def get_model_picker_replacements(lang_code: str) -> dict[str, str]:
     replacements_by_lang = {
         "zh-CN": {
             "Higher effort means more thorough responses, but takes longer and uses your limits faster.": "更高的思考深度会带来更全面的回答，但耗时更久，也会更快消耗你的额度。",
-            "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.": "可能会消耗大量 token，导致响应时间很长，也可能触及 token 限制。请仅在最困难的任务中谨慎使用。",
+            "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.": "可能会消耗大量词元，导致响应时间很长，也可能触及词元限制。请仅在最困难的任务中谨慎使用。",
             "Most capable for ambitious work": "适合高难度工作的最强模型",
             "1M context window": "100 万上下文窗口",
             'name:"Low"': 'name:"低"',
@@ -946,7 +946,7 @@ def get_model_picker_replacements(lang_code: str) -> dict[str, str]:
         },
         "zh-TW": {
             "Higher effort means more thorough responses, but takes longer and uses your limits faster.": "更高的思考深度會帶來更全面的回應，但耗時更久，也會更快消耗你的額度。",
-            "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.": "可能會消耗大量 token，導致回應時間很長，也可能觸及 token 限制。請僅在最困難的任務中謹慎使用。",
+            "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.": "可能會消耗大量詞元，導致回應時間很長，也可能觸及詞元限制。請僅在最困難的任務中謹慎使用。",
             "Most capable for ambitious work": "適合高難度工作的最強模型",
             "1M context window": "100 萬上下文視窗",
             'name:"Low"': 'name:"低"',
@@ -957,7 +957,7 @@ def get_model_picker_replacements(lang_code: str) -> dict[str, str]:
         },
         "zh-HK": {
             "Higher effort means more thorough responses, but takes longer and uses your limits faster.": "更高的思考深度會帶來更全面的回應，但耗時更久，也會更快消耗你的額度。",
-            "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.": "可能會消耗大量 token，導致回應時間很長，也可能觸及 token 限制。請僅在最困難的任務中謹慎使用。",
+            "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.": "可能會消耗大量詞元，導致回應時間很長，也可能觸及詞元限制。請僅在最困難的任務中謹慎使用。",
             "Most capable for ambitious work": "適合高難度工作的最強模型",
             "1M context window": "100 萬上下文視窗",
             'name:"Low"': 'name:"低"',

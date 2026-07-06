@@ -721,15 +721,15 @@
   ],
   [
     "label:\"Scheduled\"",
-    "label:\"排程任務\""
+    "label:\"定時任務\""
   ],
   [
     "const ya=\"Scheduled\"",
-    "const ya=\"排程任務\""
+    "const ya=\"定時任務\""
   ],
   [
     "defaultMessage:\"Scheduled\",id:\"cXAlMRerxW\"",
-    "defaultMessage:\"排程任務\",id:\"cXAlMRerxW\""
+    "defaultMessage:\"定時任務\",id:\"cXAlMRerxW\""
   ],
   [
     "label:\"Customize\"",
@@ -737,7 +737,7 @@
   ],
   [
     "title:\"Scheduled tasks\"",
-    "title:\"排程任務\""
+    "title:\"定時任務\""
   ],
   [
     "children:\"Run tasks on a schedule or whenever you need them. Type /schedule in any existing task to set one up.\"",
@@ -773,7 +773,7 @@
   ],
   [
     "title:\"New scheduled task\"",
-    "title:\"新增排程任務\""
+    "title:\"新增定時任務\""
   ],
   [
     "T=P.length>0?`Usage: ${P.join(\", \")}`:\"Usage\";",
@@ -1109,7 +1109,7 @@
   ],
   [
     "Scheduled",
-    "排程任務"
+    "定時任務"
   ],
   [
     "Allow Auto mode",

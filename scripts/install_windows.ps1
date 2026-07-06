@@ -43,9 +43,14 @@ if ($OriginalLocalAppData) { $env:CLAUDE_ZH_ORIGINAL_LOCALAPPDATA = $OriginalLoc
 function Start-InstallLog {
     try {
         $root = if ($PSScriptRoot) { Split-Path -Parent $PSScriptRoot } else { (Get-Location).Path }
-        $script:InstallLogPath = Join-Path $root "install-windows.log"
+        $logsDir = Join-Path $root "logs"
+        New-Item -ItemType Directory -Path $logsDir -Force | Out-Null
+        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $logName = "install_windows_$timestamp.log"
+        $script:InstallLogPath = Join-Path $logsDir $logName
         Start-Transcript -Path $script:InstallLogPath -Force | Out-Null
         $script:InstallTranscriptStarted = $true
+        Write-Host "  [日志] $script:InstallLogPath" -ForegroundColor DarkGray
     }
     catch {
         $script:InstallTranscriptStarted = $false
@@ -129,6 +134,7 @@ function Read-InteractiveSelection {
     Write-Host "[1] 安装中文补丁(第三方API登陆模式(例DeepSeek)：（Cowork 沙箱/工作区不可用(看群公告))"
     Write-Host "[2] 安装中文补丁(官方账号登录模式：Cowork 沙箱/工作区不可用(看群公告))"
     Write-Host "[3] 恢复原样 / 卸载补丁"
+    Write-Host "[4] 自动更新设置（y=禁止自动更新，n=允许自动更新）"
     Write-Host "[5] 同步 CC Switch skills（y=开启同步，n=删除同步）"
     Write-Host "[Q] 退出"
     Write-Host ""
@@ -623,6 +629,63 @@ function Install-LanguageFiles {
 
     Copy-Item $Pack["Statsig"] (Join-Path $statsigDir "$Lang.json") -Force
     Write-Host "  installed ion-dist/i18n/statsig/$Lang.json" -ForegroundColor Green
+}
+
+function Merge-FrontendLocale {
+    param(
+        [string]$ResourcesPath,
+        [hashtable]$Pack,
+        [string]$Lang
+    )
+
+    $enPath = Join-Path $ResourcesPath "ion-dist\i18n\en-US.json"
+    $zhPath = $Pack["Frontend"]
+    $targetPath = Join-Path (Join-Path $ResourcesPath "ion-dist\i18n") "$Lang.json"
+
+    if (-not (Test-Path $enPath)) {
+        Write-Host "  [跳过] 未找到 en-US.json，无法 merge locale：$enPath" -ForegroundColor DarkYellow
+        return
+    }
+    if (-not (Test-Path $zhPath)) {
+        Write-Host "  [跳过] 未找到 zh 翻译包，无法 merge：$zhPath" -ForegroundColor DarkYellow
+        return
+    }
+
+    # 使用 .NET JavaScriptSerializer（PS5.1 可用，大小写敏感）
+    # 替代 ConvertFrom-Json（PS5.1 的 PSCustomObject 大小写不敏感，撞键崩溃）
+    Add-Type -AssemblyName System.Web.Extensions -ErrorAction Stop
+    $ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+    $en = [hashtable]$ser.DeserializeObject((Get-Content $enPath -Raw -Encoding UTF8))
+    $zh = [hashtable]$ser.DeserializeObject((Get-Content $zhPath -Raw -Encoding UTF8))
+    $ser = $null
+
+    $merged = [ordered]@{}
+    $translated = 0
+    $fallback = 0
+    foreach ($key in $en.Keys) {
+        if ($zh.ContainsKey($key)) {
+            $merged[$key] = $zh[$key]
+            if ($zh[$key] -ne $en[$key]) {
+                $translated++
+            }
+        }
+        else {
+            $merged[$key] = $en[$key]
+            $fallback++
+        }
+    }
+
+    $extra = 0
+    foreach ($key in $zh.Keys) {
+        if (-not $en.ContainsKey($key)) {
+            $extra++
+            $merged[$key] = $zh[$key]
+        }
+    }
+
+    $json = $merged | ConvertTo-Json -Depth 10
+    [System.IO.File]::WriteAllText($targetPath, $json, $Utf8NoBom)
+    Write-Host "  merged frontend $Lang : $translated 已翻译, $fallback 回退英文, $extra 附加旧键" -ForegroundColor Green
 }
 
 function Align-4 {
@@ -1609,7 +1672,12 @@ function Patch-HardcodedFrontendStrings {
     $replacements = @(Get-FrontendHardcodedReplacements $Language)
     $patchedFiles = 0
     $patchedStrings = 0
+    $fileIndex = 0
+    $totalFiles = $jsFiles.Count
+    Write-Host "  [进度] 共 $totalFiles 个 JS bundle，开始扫描..." -ForegroundColor DarkGray
     foreach ($file in $jsFiles) {
+        $fileIndex++
+        Write-Host "  [进度] [$fileIndex/$totalFiles] $($file.Name)" -ForegroundColor DarkGray
         $text = [System.IO.File]::ReadAllText($file.FullName, [System.Text.Encoding]::UTF8)
         $patched = $text
         $count = 0
@@ -1628,6 +1696,7 @@ function Patch-HardcodedFrontendStrings {
             [System.IO.File]::WriteAllText($file.FullName, $patched, $Utf8NoBom)
             $patchedFiles += 1
             $patchedStrings += $count
+            Write-Host "    patched: $($file.Name) ($count replacements)" -ForegroundColor DarkGray
         }
     }
 
@@ -2245,7 +2314,7 @@ function Get-ModelPickerReplacementPairs {
         "zh-CN" {
             return @(
                 @("Higher effort means more thorough responses, but takes longer and uses your limits faster.", "更高的思考深度会带来更全面的回答，但耗时更久，也会更快消耗你的额度。"),
-                @("May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.", "可能会消耗大量 token，导致响应时间很长，也可能触及 token 限制。请仅在最困难的任务中谨慎使用。"),
+                @("May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.", "可能会消耗大量词元，导致响应时间很长，也可能触及词元限制。请仅在最困难的任务中谨慎使用。"),
                 @("Most capable for ambitious work", "适合高难度工作的最强模型"),
                 @("1M context window", "100 万上下文窗口"),
                 @("name:`"Low`"", "name:`"低`""),
@@ -2258,7 +2327,7 @@ function Get-ModelPickerReplacementPairs {
         "zh-TW" {
             return @(
                 @("Higher effort means more thorough responses, but takes longer and uses your limits faster.", "更高的思考深度會帶來更全面的回應，但耗時更久，也會更快消耗你的額度。"),
-                @("May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.", "可能會消耗大量 token，導致回應時間很長，也可能觸及 token 限制。請僅在最困難的任務中謹慎使用。"),
+                @("May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.", "可能會消耗大量詞元，導致回應時間很長，也可能觸及詞元限制。請僅在最困難的任務中謹慎使用。"),
                 @("Most capable for ambitious work", "適合高難度工作的最強模型"),
                 @("1M context window", "100 萬上下文視窗"),
                 @("name:`"Low`"", "name:`"低`""),
@@ -2271,7 +2340,7 @@ function Get-ModelPickerReplacementPairs {
         "zh-HK" {
             return @(
                 @("Higher effort means more thorough responses, but takes longer and uses your limits faster.", "更高的思考深度會帶來更全面的回應，但耗時更久，也會更快消耗你的額度。"),
-                @("May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.", "可能會消耗大量 token，導致回應時間很長，也可能觸及 token 限制。請僅在最困難的任務中謹慎使用。"),
+                @("May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.", "可能會消耗大量詞元，導致回應時間很長，也可能觸及詞元限制。請僅在最困難的任務中謹慎使用。"),
                 @("Most capable for ambitious work", "適合高難度工作的最強模型"),
                 @("1M context window", "100 萬上下文視窗"),
                 @("name:`"Low`"", "name:`"低`""),
@@ -3206,6 +3275,7 @@ function Install-WindowsLanguagePack {
 
         Write-Step "[5/8] 写入 $label 资源"
         Install-LanguageFiles $resourcesPath $pack $LanguageCode
+        Merge-FrontendLocale $resourcesPath $pack $LanguageCode
 
         Write-Step "[6/8] 注册中文语言"
         Register-Language $resourcesPath $LanguageCode

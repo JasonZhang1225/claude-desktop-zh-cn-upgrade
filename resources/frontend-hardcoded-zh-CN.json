@@ -1205,15 +1205,15 @@
   ],
   [
     "label:\"Scheduled\"",
-    "label:\"计划任务\""
+    "label:\"定时任务\""
   ],
   [
     "const ya=\"Scheduled\"",
-    "const ya=\"计划任务\""
+    "const ya=\"定时任务\""
   ],
   [
     "defaultMessage:\"Scheduled\",id:\"cXAlMRerxW\"",
-    "defaultMessage:\"计划任务\",id:\"cXAlMRerxW\""
+    "defaultMessage:\"定时任务\",id:\"cXAlMRerxW\""
   ],
   [
     "label:\"Customize\"",
@@ -1221,7 +1221,7 @@
   ],
   [
     "title:\"Scheduled tasks\"",
-    "title:\"计划任务\""
+    "title:\"定时任务\""
   ],
   [
     "children:\"Run tasks on a schedule or whenever you need them. Type /schedule in any existing task to set one up.\"",
@@ -1265,7 +1265,7 @@
   ],
   [
     "title:\"New scheduled task\"",
-    "title:\"新建计划任务\""
+    "title:\"新建定时任务\""
   ],
   [
     "T=P.length>0?`Usage: ${P.join(\", \")}`:\"Usage\";",
@@ -1589,7 +1589,7 @@
   ],
   [
     "Scheduled",
-    "计划任务"
+    "定时任务"
   ],
   [
     "Allow Auto mode",
