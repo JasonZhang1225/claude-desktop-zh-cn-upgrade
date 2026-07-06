@@ -1972,8 +1972,10 @@ def set_macos_managed_auto_updates(user_home: Path, enabled: bool, dry_run: bool
 
 
 def set_auto_updates(user_home: Path, enabled: bool, dry_run: bool = False) -> bool:
-    if set_third_party_config_auto_updates(user_home, enabled=enabled, dry_run=dry_run):
-        return True
+    # Always write the managed-policy (plist) layer so the setting survives
+    # 3P config churn (CC Switch rewriting Claude-3p/config.json would otherwise
+    # wipe disableAutoUpdates). 3P is still updated when present for belt-and-suspenders.
+    set_third_party_config_auto_updates(user_home, enabled=enabled, dry_run=dry_run)
     return set_macos_managed_auto_updates(user_home, enabled=enabled, dry_run=dry_run)
 
 

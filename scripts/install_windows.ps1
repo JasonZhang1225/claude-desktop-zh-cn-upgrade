@@ -2589,14 +2589,16 @@ function Set-ClaudeManagedAutoUpdates {
 function Set-ClaudeAutoUpdates {
     param([bool]$Enabled)
 
-    if (-not (Set-ThirdPartyConfigAutoUpdates $Enabled)) {
-        Set-ClaudeManagedAutoUpdates $Enabled
-    }
+    # Always write the managed-policy (registry) layer so the setting survives
+    # 3P config churn (CC Switch rewriting Claude-3p/config.json would otherwise
+    # wipe disableAutoUpdates). 3P is still updated when present for belt-and-suspenders.
+    $thirdPartyUpdated = Set-ThirdPartyConfigAutoUpdates $Enabled
+    Set-ClaudeManagedAutoUpdates $Enabled | Out-Null
 
     if ($Enabled) {
         Write-Host "允许更新成功" -ForegroundColor Green
     } else {
-        Write-Host "禁止更新成功" -ForegroundColor Green
+        Write-Host "禁止更新成功（已写注册表，3P 切换不影响）" -ForegroundColor Green
     }
 }
 
