@@ -8,3 +8,6 @@ venv/
 .omc/
 .reasonix/
 
+
+# 旧翻译快照存档(留磁盘作历史参考,不进git)
+_archive/
