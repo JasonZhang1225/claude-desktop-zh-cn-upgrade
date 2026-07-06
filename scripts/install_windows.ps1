@@ -1346,16 +1346,18 @@ function Get-OnlineTranslationMap {
     Require-File $Pack["Frontend"]
 
     Write-Host "  loading online DOM translation sources" -ForegroundColor DarkGray
-    $en = Get-Content $enPath -Raw -Encoding UTF8 | ConvertFrom-Json
-    $zh = Get-Content $Pack["Frontend"] -Raw -Encoding UTF8 | ConvertFrom-Json
+    Add-Type -AssemblyName System.Web.Extensions -ErrorAction Stop
+    $ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+    $en = [hashtable]$ser.DeserializeObject((Get-Content $enPath -Raw -Encoding UTF8))
+    $zh = [hashtable]$ser.DeserializeObject((Get-Content $Pack["Frontend"] -Raw -Encoding UTF8))
+    $ser = $null
     $mapping = [ordered]@{}
 
     Write-Host "  collecting frontend i18n DOM strings" -ForegroundColor DarkGray
-    foreach ($property in $en.PSObject.Properties) {
-        $source = [string]$property.Value
-        $targetProperty = $zh.PSObject.Properties[$property.Name]
-        if ($targetProperty) {
-            $target = [string]$targetProperty.Value
+    foreach ($key in $en.Keys) {
+        $source = [string]$en[$key]
+        if ($zh.ContainsKey($key)) {
+            $target = [string]$zh[$key]
             if (Test-OnlineDomTranslationEntry $source $target) {
                 $mapping[$source] = $target
             }
