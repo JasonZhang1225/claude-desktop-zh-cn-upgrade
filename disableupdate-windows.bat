@@ -10,7 +10,7 @@ echo 当前状态：
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$v=[Environment]::GetEnvironmentVariable('CLAUDE_ZH_SKIP_UPDATE_CHECK','User'); if ($v -match '^(1|true|TRUE|yes|YES|y|Y)$') { Write-Host '  更新检查：已禁止' -ForegroundColor Yellow } else { Write-Host '  更新检查：未禁止（默认）' -ForegroundColor Green }"
 echo.
 echo 是否禁止补丁脚本检查新版本？
-echo   按 Y — 禁止更新检查（以后打补丁不再提示有新版）
+echo   按 Y — 禁止更新检查
 echo   按 N — 取消禁止，恢复更新检查（默认）
 echo.
 
