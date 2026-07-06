@@ -392,10 +392,6 @@
     ".dxt 和 .mcpb 安装包。"
   ],
   [
-    "Copy",
-    "复制"
-  ],
-  [
     "CORE (VM BUNDLE + CLAUDE CLI BINARY)",
     "核心（VM 包 + Claude CLI 二进制文件）"
   ],
@@ -453,7 +449,7 @@
   ],
   [
     "Max tokens per window",
-    "每窗口最大令牌数"
+    "每窗口最大词元数"
   ],
   [
     "MCP SERVERS",
@@ -517,7 +513,7 @@
   ],
   [
     "tokens",
-    "令牌"
+    "词元"
   ],
   [
     "Users see only this provider at the login screen. The option to sign in to Claude.ai is hidden.",
@@ -1129,7 +1125,7 @@
   ],
   [
     "title:\"Max tokens per window\"",
-    "title:\"每窗口最大令牌数\""
+    "title:\"每窗口最大词元数\""
   ],
   [
     "title:\"Model discovery\"",
@@ -1544,10 +1540,6 @@
     "返回每用户 JSON 配置覆盖层的 HTTPS 端点。响应中的值会覆盖本地设置并变为只读。"
   ],
   [
-    "Tasks",
-    "任务"
-  ],
-  [
     "Archive 1 task? You can find it in the Archived tab.",
     "要归档 1 个任务吗？你可以在“已归档”标签页中找到它。"
   ],
@@ -1689,11 +1681,11 @@
   ],
   [
     "Transcript width",
-    "转录宽度"
+    "文本和内容宽度"
   ],
   [
     "Maximum width of the transcript and composer columns.",
-    "转录内容和输入框列的最大宽度。"
+    "对话内容和输入框的最大宽度。"
   ],
   [
     "Narrow",
@@ -2124,51 +2116,35 @@
     "\"allow\" 会预先批准。"
   ],
   [
-    "Higher effort means more thorough responses, but takes longer and uses your limits faster.",
-    "更高的思考深度会带来更全面的回答，但耗时更久，也会更快消耗你的额度。"
+    "Bypass all permission checks and let Claude work uninterrupted. This works well for workflows like fixing lint errors or generating boilerplate code. Letting Claude run arbitrary commands is risky and can result in data loss, system corruption, or data exfiltration (e.g., via prompt injection attacks).",
+    "绕过所有权限检查，让 Claude 不受干扰地工作。这适用于修复 lint 错误或生成模板代码等工作流。让 Claude 运行任意命令存在风险，可能导致数据丢失、系统损坏或数据泄露（例如通过提示注入攻击）。"
   ],
   [
-    "May use excessive tokens resulting in long response times and may hit token limits. Use sparingly for the hardest tasks.",
-    "可能会消耗大量 token，导致响应时间很长，也可能触及 token 限制。请仅在最困难的任务中谨慎使用。"
+    "Bounce the Dock icon when Claude needs your attention and the app is not focused.",
+    "当 Claude 需要你的注意且应用未处于焦点时，弹跳 Dock 图标。"
   ],
   [
-    "Most capable for ambitious work",
-    "适合高难度工作的最强模型"
+    "Flash the taskbar button when Claude needs your attention and the app is not focused.",
+    "当 Claude 需要你的注意且应用未处于前台时，任务栏图标将闪烁。"
   ],
   [
-    "1M context window",
-    "100 万上下文窗口"
+    "Prefix added to branch names for both local and cloud sessions",
+    "本地和云端会话的分支名称前缀"
   ],
   [
-    "defaultMessage:\"Low\",id:\"Xft0R8xbIB\"",
-    "defaultMessage:\"低\",id:\"Xft0R8xbIB\""
+    "You're running Claude through your organization's own inference provider",
+    "你正在通过你组织的自有推理提供商运行 Claude"
   ],
   [
-    "defaultMessage:\"Medium\",id:\"U0mtsR78v2\"",
-    "defaultMessage:\"中\",id:\"U0mtsR78v2\""
+    "Your conversations are sent there, not to Anthropic, and are governed by your organization's agreement with that provider.",
+    "你的对话会发送到那里，而不是 Anthropic，并受你组织与该提供商的协议约束。"
   ],
   [
-    "defaultMessage:\"High\",id:\"vv9L/MN3/H\"",
-    "defaultMessage:\"高\",id:\"vv9L/MN3/H\""
+    "Describe a task or ask a question",
+    "描述一个任务或提问"
   ],
   [
-    "defaultMessage:\"Extra\",id:\"HoZQmASaw3\"",
-    "defaultMessage:\"极高\",id:\"HoZQmASaw3\""
-  ],
-  [
-    "defaultMessage:\"Max\",id:\"Zk4EtKw26K\"",
-    "defaultMessage:\"最高\",id:\"Zk4EtKw26K\""
-  ],
-  [
-    "defaultMessage:\"Thinking\",id:\"DvRKnnUSOG\"",
-    "defaultMessage:\"思考\",id:\"DvRKnnUSOG\""
-  ],
-  [
-    "defaultMessage:\"Extended\",id:\"4RgMF5iUDm\"",
-    "defaultMessage:\"扩展\",id:\"4RgMF5iUDm\""
-  ],
-  [
-    "defaultMessage:\"Off\",id:\"PLBs+fqK6A\"",
-    "defaultMessage:\"关闭\",id:\"PLBs+fqK6A\""
+    "Type / for commands",
+    "键入 / 以使用命令"
   ]
 ]

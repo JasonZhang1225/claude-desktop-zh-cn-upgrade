@@ -620,7 +620,7 @@ def build_online_dom_translation_script(lang_code: str, mapping: dict[str, str])
         'if(txt==="Claude"&&r.left<100&&r.top<100)e.style.visibility="hidden"}catch{}});'
         "}catch{}}"
         "T();"
-        "new MutationObserver(()=>{clearTimeout(window.__claudeZhDomTimer);window.__claudeZhDomTimer=setTimeout(T,30)})"
+        "new MutationObserver(T)"
         ".observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true});"
         "}catch(e){}})()"
     )
@@ -942,7 +942,6 @@ def get_model_picker_replacements(lang_code: str) -> dict[str, str]:
             'name:"Medium"': 'name:"中"',
             'name:"High"': 'name:"高"',
             'name:"Extra"': 'name:"极高"',
-            'name:"Max"': 'name:"最高"',
             'message:"Default"': 'message:"默认"',
         },
         "zh-TW": {
@@ -954,7 +953,6 @@ def get_model_picker_replacements(lang_code: str) -> dict[str, str]:
             'name:"Medium"': 'name:"中"',
             'name:"High"': 'name:"高"',
             'name:"Extra"': 'name:"極高"',
-            'name:"Max"': 'name:"最高"',
             'message:"Default"': 'message:"預設"',
         },
         "zh-HK": {
@@ -966,7 +964,6 @@ def get_model_picker_replacements(lang_code: str) -> dict[str, str]:
             'name:"Medium"': 'name:"中"',
             'name:"High"': 'name:"高"',
             'name:"Extra"': 'name:"極高"',
-            'name:"Max"': 'name:"最高"',
             'message:"Default"': 'message:"預設"',
         },
     }
@@ -1661,6 +1658,54 @@ def merge_frontend_locale(app: Path, lang_code: str) -> tuple[int, int, int]:
     extra = len(set(zh_pack) - set(en))
     print(f"Installed frontend {lang_code}: {translated} translated, {fallback} fallback, {extra} extra old keys ignored")
     return translated, fallback, extra
+
+
+# Code bundle placeholder i18n keys. The Code bundle renders input placeholders via
+# `formatMessage({defaultMessage, id})`; when the runtime locale is still en-US, react-intl
+# reads en-US.json for these ids and returns English. Injecting the zh translations into
+# en-US.json for this small set (instead of the whole pack) makes placeholders render
+# Chinese without touching the rest of the en-US source. See Opencode 修改汇总.md.
+PLACEHOLDER_EN_OVERRIDE_KEYS = (
+    "+r+3aH0PJK",  # Search files…
+    "74ciYOB1D8",  # Search repositories
+    "7A3gQkZ3c/",  # Anything else to add?
+    "C9CzAnCf9L",  # Leave a comment for Claude…
+    "NNBHaPuMiG",  # Search branches…
+    "WcpX6H7krr",  # Find in file…
+    "fHClqd2+bS",  # Type / for commands
+    "h2ZPhZTOS+",  # Type your own answer here
+    "kOy650CtFs",  # Describe the issue
+    "vuZ0grTqWR",  # Search repos…
+    "lKv8exH0MR",  # AI.defaultPlaceholder ("默认")
+    "UQXG4vYSXA",  # AI.sshNamePlaceholder ("My Server")
+)
+
+
+def inject_placeholders_into_en_locale(app: Path, lang_code: str) -> int:
+    """Write the zh translations for the Code-bundle placeholder keys into en-US.json,
+    so input placeholders render Chinese even when react-intl falls back to locale=en-US.
+    Only the keys in PLACEHOLDER_EN_OVERRIDE_KEYS are touched; everything else in en-US
+    stays English. This modifies the live app's en-US.json (not the repo copy)."""
+    config = get_language_config(lang_code)
+    en_path = app / FRONTEND_I18N_REL / "en-US.json"
+    require_file(en_path)
+    require_file(config["frontend_translation"])
+
+    en = load_json(en_path)
+    zh_pack = load_json(config["frontend_translation"])
+    if not isinstance(en, dict) or not isinstance(zh_pack, dict):
+        raise SystemExit("Unsupported frontend i18n JSON shape for en-US placeholder override.")
+
+    injected = 0
+    for key in PLACEHOLDER_EN_OVERRIDE_KEYS:
+        if key in zh_pack and zh_pack[key] != en.get(key):
+            en[key] = zh_pack[key]
+            injected += 1
+
+    if injected:
+        save_json(en_path, en)
+    print(f"Injected en-US placeholder overrides: {injected} keys (of {len(PLACEHOLDER_EN_OVERRIDE_KEYS)} candidates)")
+    return injected
 
 
 def install_desktop_locale(app: Path, lang_code: str) -> None:
@@ -2405,6 +2450,7 @@ def main() -> int:
         patch_custom3p_model_validation(patched_app)
         patch_model_picker_strings(patched_app, lang_code)
     merge_frontend_locale(patched_app, lang_code)
+    inject_placeholders_into_en_locale(patched_app, lang_code)
     install_desktop_locale(patched_app, lang_code)
     install_statsig_locale(patched_app, lang_code)
     resign_app(patched_app)
