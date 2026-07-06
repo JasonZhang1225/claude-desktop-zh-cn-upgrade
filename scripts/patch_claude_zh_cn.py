@@ -1678,6 +1678,8 @@ PLACEHOLDER_EN_OVERRIDE_KEYS = (
     "vuZ0grTqWR",  # Search repos…
     "lKv8exH0MR",  # AI.defaultPlaceholder ("默认")
     "UQXG4vYSXA",  # AI.sshNamePlaceholder ("My Server")
+    "RLloCeiLx7",  # Cowork composer "Describe a task or ask a question"
+    "tV2NkM49Bx",  # Cowork composer "Describe a task, from a quick fix to a multi-step job."
 )
 
 
