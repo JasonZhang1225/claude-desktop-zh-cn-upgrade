@@ -2,11 +2,11 @@
 setlocal EnableExtensions
 
 echo ============================================
-echo   Claude Desktop 补丁 - 允许更新检查
+echo   Claude Desktop 汉化补丁 - 恢复更新检查
 echo ============================================
 echo.
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "[Environment]::SetEnvironmentVariable('CLAUDE_ZH_SKIP_UPDATE_CHECK',$null,'User'); Write-Host '已允许补丁更新检查（恢复默认）。' -ForegroundColor Green"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "[Environment]::SetEnvironmentVariable('CLAUDE_ZH_SKIP_UPDATE_CHECK',$null,'User'); Write-Host '已恢复更新检查（取消禁止）。' -ForegroundColor Green"
 echo.
-echo 注意：新开的窗口才会读到新设置。
+echo 注意：新打开的窗口才会读到新设置。
 pause
 exit /b 0
